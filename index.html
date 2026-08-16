@@ -1,148 +1,32 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jamb Blokčić</title>
-    <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #f8fafc; 
-            margin: 0; 
-            padding: 10px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h2 { color: #1e293b; margin-bottom: 10px; }
-        .table-container {
-            width: 100%;
-            max-width: 800px;
-            background: white;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow-x: auto;
-            padding: 5px;
-        }
-        table { 
-            border-collapse: collapse; 
-            width: 100%; 
-            min-width: 600px;
-        }
-        th, td { 
-            border: 1px solid #cbd5e1; 
-            padding: 0; 
-            text-align: center; 
-            height: 40px;
-        }
-        th { 
-            background-color: #3b82f6; 
-            color: white; 
-            font-size: 14px;
-        }
-        td.label { 
-            background-color: #f1f5f9; 
-            font-weight: bold; 
-            color: #475569;
-            width: 70px; 
-            font-size: 13px; 
-        }
-        input { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-            text-align: center; 
-            font-size: 18px; 
-            background: transparent;
-            /* Ovo osigurava da se otvara velika tastatura */
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        input:focus { 
-            background: #e0f2fe; 
-            outline: none; 
-        }
-        .sum-row td { background-color: #dbeafe; }
-        .sum-row input { font-weight: bold; color: #1d4ed8; pointer-events: none; }
-        
-        /* Uklanja strelice za brojeve */
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jamb Blokčić</title>
+<style>
+:root{--bg:#07111c;--panel:#0d1823;--panel2:#13212d;--line:#415361;--text:#f4f6f7;--muted:#9eabb6;--red:#d71920;--blue:#1b7089;--sum:#143448}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at 15% 10%,rgba(140,22,26,.18),transparent 28%),radial-gradient(circle at 85% 25%,rgba(98,67,24,.16),transparent 30%),linear-gradient(180deg,#07111c,#0a1723 55%,#050c13)}
+.app{max-width:920px;margin:auto;padding:18px 10px calc(24px + env(safe-area-inset-bottom))}
+.logo{text-align:center;font-size:48px;font-weight:900;letter-spacing:2px;margin:8px 0 18px;text-shadow:0 6px 18px #000}.logo span{color:var(--red)}
+.panel{background:linear-gradient(180deg,rgba(14,25,36,.98),rgba(9,18,27,.98));border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:0 10px 28px rgba(0,0,0,.35);overflow:auto}
+table{width:100%;min-width:690px;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #40515f;height:42px;text-align:center;padding:0}th{background:#111f2c;color:#fff;font-size:15px;font-weight:800}th:first-child{width:72px;background:linear-gradient(#d91f25,#b40d12)}td.label{background:#13212d;color:#fff;font-weight:800;font-size:13px}.sum-row td.label{background:#8f0e13}.sum-row td{background:var(--sum)}input{width:100%;height:100%;border:none;background:transparent;color:var(--text);text-align:center;font-size:18px;font-weight:700;outline:none;appearance:none;-webkit-appearance:none}input:focus{background:rgba(27,112,137,.35);box-shadow:inset 0 0 0 2px #2da4c5}.sum-row input{color:#7ee3ff;font-weight:900;pointer-events:none}input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.footer{margin-top:12px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:480px){.logo{font-size:40px}th,td{height:38px}input{font-size:16px}}
+</style>
 </head>
 <body>
-
-    <h2>Jamb Blokčić</h2>
-    <div class="table-container">
-        <table id="jambTable"></table>
-    </div>
-
-    <script>
-        const cols = ['🎲', '⬇', '⬆', '↕', 'N', 'R', 'D', '⬇↕', '↕', 'O', 'M'];
-        const rows = [
-            {id: '1', label: '1'}, {id: '2', label: '2'}, {id: '3', label: '3'}, 
-            {id: '4', label: '4'}, {id: '5', label: '5'}, {id: '6', label: '6'},
-            {id: 'zbir1', label: 'ZBIR', isSum: true},
-            {id: 'max', label: 'MAX'}, {id: 'min', label: 'MIN'},
-            {id: 'maxmin', label: 'MAX-MIN', isSum: true},
-            {id: 'kenta', label: 'KENTA'}, {id: 'triling', label: 'TRILING'},
-            {id: 'ful', label: 'FUL'}, {id: 'poker', label: 'POKER'},
-            {id: 'yamb', label: 'YAMB'},
-            {id: 'zbir2', label: 'ZBIR', isSum: true}
-        ];
-
-        const table = document.getElementById('jambTable');
-        
-        // Zaglavlje
-        let trH = document.createElement('tr');
-        cols.forEach(c => { let th = document.createElement('th'); th.innerText = c; trH.appendChild(th); });
-        table.appendChild(trH);
-
-        // Redovi
-        rows.forEach(r => {
-            let tr = document.createElement('tr');
-            if(r.isSum) tr.className = 'sum-row';
-            let tdL = document.createElement('td'); tdL.className = 'label'; tdL.innerText = r.label;
-            tr.appendChild(tdL);
-
-            for(let i = 1; i < cols.length; i++) {
-                let td = document.createElement('td');
-                let input = document.createElement('input');
-                input.type = 'number';
-                input.inputMode = 'numeric'; // Ovo forsira numeričku tastaturu na iOS/Android
-                input.dataset.col = i;
-                input.dataset.row = r.id;
-                if(r.isSum) input.readOnly = true;
-                else input.addEventListener('input', () => calc(i));
-                td.appendChild(input);
-                tr.appendChild(td);
-            }
-            table.appendChild(tr);
-        });
-
-        function calc(col) {
-            // Gornji zbir
-            let s1 = 0;
-            for(let i=1; i<=6; i++) {
-                let v = document.querySelector(`input[data-col="${col}"][data-row="${i}"]`).value;
-                if(v) s1 += parseInt(v);
-            }
-            if(s1 >= 60) s1 += 30;
-            document.querySelector(`input[data-col="${col}"][data-row="zbir1"]`).value = s1 || '';
-
-            // MAX-MIN
-            let max = document.querySelector(`input[data-col="${col}"][data-row="max"]`).value;
-            let min = document.querySelector(`input[data-col="${col}"][data-row="min"]`).value;
-            let k1 = document.querySelector(`input[data-col="${col}"][data-row="1"]`).value;
-            if(max && min && k1) document.querySelector(`input[data-col="${col}"][data-row="maxmin"]`).value = (max - min) * k1;
-
-            // Donji zbir
-            let s2 = 0;
-            ['kenta', 'triling', 'ful', 'poker', 'yamb'].forEach(id => {
-                let v = document.querySelector(`input[data-col="${col}"][data-row="${id}"]`).value;
-                if(v) s2 += parseInt(v);
-            });
-            document.querySelector(`input[data-col="${col}"][data-row="zbir2"]`).value = s2 || '';
-        }
-    </script>
+<div class="app">
+<div class="logo">JAMB <span>BLOKČIĆ</span></div>
+<div class="panel"><table id="jambTable"></table></div>
+<div class="footer">Automatski računa ZBIR, MAX−MIN i donji ZBIR.</div>
+</div>
+<script>
+const cols=['🎲','⬇','⬆','↕','N','R','D','⬇↕','↕','O','M'];
+const rows=[{id:'1',label:'1'},{id:'2',label:'2'},{id:'3',label:'3'},{id:'4',label:'4'},{id:'5',label:'5'},{id:'6',label:'6'},{id:'zbir1',label:'ZBIR',isSum:true},{id:'max',label:'MAX'},{id:'min',label:'MIN'},{id:'maxmin',label:'MAX-MIN',isSum:true},{id:'kenta',label:'KENTA'},{id:'triling',label:'TRILING'},{id:'ful',label:'FUL'},{id:'poker',label:'POKER'},{id:'yamb',label:'YAMB'},{id:'zbir2',label:'ZBIR',isSum:true}];
+const table=document.getElementById('jambTable');
+let trH=document.createElement('tr');cols.forEach(c=>{let th=document.createElement('th');th.textContent=c;trH.appendChild(th)});table.appendChild(trH);
+rows.forEach(r=>{let tr=document.createElement('tr');if(r.isSum)tr.className='sum-row';let tdL=document.createElement('td');tdL.className='label';tdL.textContent=r.label;tr.appendChild(tdL);for(let i=1;i<cols.length;i++){let td=document.createElement('td');let input=document.createElement('input');input.type='number';input.inputMode='numeric';input.dataset.col=i;input.dataset.row=r.id;if(r.isSum)input.readOnly=true;else input.addEventListener('input',()=>calc(i));td.appendChild(input);tr.appendChild(td)}table.appendChild(tr)});
+function calc(col){let s1=0;for(let i=1;i<=6;i++){let v=document.querySelector(`input[data-col="${col}"][data-row="${i}"]`).value;if(v)s1+=parseInt(v)}if(s1>=60)s1+=30;document.querySelector(`input[data-col="${col}"][data-row="zbir1"]`).value=s1||'';let max=document.querySelector(`input[data-col="${col}"][data-row="max"]`).value;let min=document.querySelector(`input[data-col="${col}"][data-row="min"]`).value;let k1=document.querySelector(`input[data-col="${col}"][data-row="1"]`).value;document.querySelector(`input[data-col="${col}"][data-row="maxmin"]`).value=(max&&min&&k1)?((max-min)*k1):'';let s2=0;['kenta','triling','ful','poker','yamb'].forEach(id=>{let v=document.querySelector(`input[data-col="${col}"][data-row="${id}"]`).value;if(v)s2+=parseInt(v)});document.querySelector(`input[data-col="${col}"][data-row="zbir2"]`).value=s2||''}
+</script>
 </body>
 </html>
