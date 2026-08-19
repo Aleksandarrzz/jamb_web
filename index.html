@@ -4,29 +4,434 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Jamb Blokčić</title>
+
 <style>
-:root{--bg:#07111c;--panel:#0d1823;--panel2:#13212d;--line:#415361;--text:#f4f6f7;--muted:#9eabb6;--red:#d71920;--blue:#1b7089;--sum:#143448}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at 15% 10%,rgba(140,22,26,.18),transparent 28%),radial-gradient(circle at 85% 25%,rgba(98,67,24,.16),transparent 30%),linear-gradient(180deg,#07111c,#0a1723 55%,#050c13)}
-.app{max-width:920px;margin:auto;padding:18px 10px calc(24px + env(safe-area-inset-bottom))}
-.logo{text-align:center;font-size:48px;font-weight:900;letter-spacing:2px;margin:8px 0 18px;text-shadow:0 6px 18px #000}.logo span{color:var(--red)}
-.panel{background:linear-gradient(180deg,rgba(14,25,36,.98),rgba(9,18,27,.98));border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:0 10px 28px rgba(0,0,0,.35);overflow:auto}
-table{width:100%;min-width:690px;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #40515f;height:42px;text-align:center;padding:0}th{background:#111f2c;color:#fff;font-size:15px;font-weight:800}th:first-child{width:72px;background:linear-gradient(#d91f25,#b40d12)}td.label{background:#13212d;color:#fff;font-weight:800;font-size:13px}.sum-row td.label{background:#8f0e13}.sum-row td{background:var(--sum)}input{width:100%;height:100%;border:none;background:transparent;color:var(--text);text-align:center;font-size:18px;font-weight:700;outline:none;appearance:none;-webkit-appearance:none}input:focus{background:rgba(27,112,137,.35);box-shadow:inset 0 0 0 2px #2da4c5}.sum-row input{color:#7ee3ff;font-weight:900;pointer-events:none}input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.footer{margin-top:12px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:480px){.logo{font-size:40px}th,td{height:38px}input{font-size:16px}}
+:root{
+  --bg:#0f172a;
+  --panel:#1e293b;
+  --panel2:#172033;
+  --line:#334155;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --accent-gold:#f59e0b;
+  --accent-red:#ef4444;
+  --accent-green:#10b981;
+  --accent-blue:#3b82f6;
+  --sum-bg:#172033;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 10% 15%,rgba(245,158,11,.15),transparent 30%),
+    radial-gradient(circle at 90% 85%,rgba(16,185,129,.12),transparent 30%),
+    linear-gradient(135deg,#090d16,#0f172a 50%,#090d16)
+}
+
+.app{
+  max-width:960px;
+  margin:auto;
+  padding:18px 10px calc(24px + env(safe-area-inset-bottom))
+}
+
+.logo{
+  text-align:center;
+  font-size:48px;
+  font-weight:900;
+  letter-spacing:3px;
+  margin:8px 0 18px;
+  text-shadow:0 4px 20px rgba(245,158,11,.3);
+  background:linear-gradient(135deg,#f8fafc,#f59e0b);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.logo span{
+  background:linear-gradient(135deg,#ef4444,#f59e0b);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.panel{
+  background:linear-gradient(180deg,rgba(30,41,59,.95),rgba(15,23,42,.98));
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:10px;
+  box-shadow:
+    0 12px 32px rgba(0,0,0,.4),
+    0 0 30px rgba(245,158,11,.08);
+  overflow:auto
+}
+
+table{
+  width:100%;
+  min-width:740px;
+  border-collapse:collapse;
+  table-layout:fixed
+}
+
+th,td{
+  border:1px solid var(--line);
+  height:42px;
+  text-align:center;
+  padding:0
+}
+
+th{
+  background:#1e293b;
+  color:#f8fafc;
+  font-size:15px;
+  font-weight:800
+}
+
+th:first-child{
+  width:72px;
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+  color:#111;
+  text-shadow:0 1px 0 rgba(255,255,255,.3);
+}
+
+th.total-col {
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#fff;
+  width: 60px;
+}
+
+td.label{
+  background:#1a2333;
+  color:#f8fafc;
+  font-weight:800;
+  font-size:13px
+}
+
+.sum-row td.label{
+  background:linear-gradient(135deg,#b45309,#92400e);
+  color:#fff;
+}
+
+.sum-row td{
+  background:var(--sum-bg)
+}
+
+/* Aktivne ćelije sa zbirom u Σ koloni */
+td.total-cell {
+  background: rgba(16,185,129,.12);
+  border: 1px solid #10b981;
+}
+
+/* Prazne ćelije u Σ koloni bez unosa */
+td.empty-cell {
+  border: 1px solid var(--line);
+  border-right: none;
+  background: rgba(15,23,42,0.3);
+}
+
+.total-sum-container {
+  margin-top: 14px;
+  background: linear-gradient(180deg,rgba(30,41,59,.95),rgba(15,23,42,.98));
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+
+.total-sum-label {
+  font-size: 16px;
+  font-weight: 800;
+  color: #34d399;
+  letter-spacing: 1px;
+}
+
+.total-sum-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  background: rgba(16,185,129,.2);
+  padding: 6px 20px;
+  border-radius: 10px;
+  border: 1px solid #10b981;
+  min-width: 110px;
+  text-align: center;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.2);
+}
+
+input{
+  width:100%;
+  height:100%;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+  outline:none;
+  appearance:none;
+  -webkit-appearance:none
+}
+
+input:focus{
+  background:rgba(245,158,11,.18);
+  box-shadow:inset 0 0 0 2px #f59e0b
+}
+
+.sum-row input{
+  color:#fcd34d;
+  font-weight:900;
+  pointer-events:none
+}
+
+.total-cell input {
+  color: #34d399;
+  font-weight: 900;
+  pointer-events: none;
+  background: transparent;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+  -webkit-appearance:none;
+  margin:0
+}
+
+.footer{
+  margin-top:14px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:.5px;
+}
+
+@media(max-width:480px){
+  .logo{
+    font-size:40px
+  }
+
+  th,td{
+    height:38px
+  }
+
+  input{
+    font-size:16px
+  }
+}
 </style>
+
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jamb">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
 </head>
+
 <body>
+
 <div class="app">
-<div class="logo">JAMB <span>BLOKČIĆ</span></div>
-<div class="panel"><table id="jambTable"></table></div>
-<div class="footer">Automatski računa ZBIR, MAX−MIN i donji ZBIR.</div>
+
+<div class="logo">PAPIRIĆI ZA <span>JAMB</span></div>
+
+<div class="panel">
+<table id="jambTable"></table>
 </div>
+
+<div class="total-sum-container">
+  <div class="total-sum-label">UKUPAN ZBIR IGRE:</div>
+  <div class="total-sum-value" id="grandTotal">0</div>
+</div>
+
+<div class="footer">
+Automatski računa ZBIR, MAX−MIN, donji ZBIR i ukupan rezultat.
+</div>
+
+</div>
+
 <script>
 const cols=['🎲','⬇','⬆','↕','N','R','D','⬇↕','↕','O','M'];
-const rows=[{id:'1',label:'1'},{id:'2',label:'2'},{id:'3',label:'3'},{id:'4',label:'4'},{id:'5',label:'5'},{id:'6',label:'6'},{id:'zbir1',label:'ZBIR',isSum:true},{id:'max',label:'MAX'},{id:'min',label:'MIN'},{id:'maxmin',label:'MAX-MIN',isSum:true},{id:'kenta',label:'KENTA'},{id:'triling',label:'TRILING'},{id:'ful',label:'FUL'},{id:'poker',label:'POKER'},{id:'yamb',label:'YAMB'},{id:'zbir2',label:'ZBIR',isSum:true}];
+
+const rows=[
+{id:'1',label:'1'},
+{id:'2',label:'2'},
+{id:'3',label:'3'},
+{id:'4',label:'4'},
+{id:'5',label:'5'},
+{id:'6',label:'6'},
+{id:'zbir1',label:'ZBIR',isSum:true, showTotal:true},
+{id:'max',label:'MAX'},
+{id:'min',label:'MIN'},
+{id:'maxmin',label:'MAX-MIN',isSum:true, showTotal:true},
+{id:'kenta',label:'KENTA'},
+{id:'triling',label:'TRILING'},
+{id:'ful',label:'FUL'},
+{id:'poker',label:'POKER'},
+{id:'yamb',label:'YAMB'},
+{id:'zbir2',label:'ZBIR',isSum:true, showTotal:true}
+];
+
 const table=document.getElementById('jambTable');
-let trH=document.createElement('tr');cols.forEach(c=>{let th=document.createElement('th');th.textContent=c;trH.appendChild(th)});table.appendChild(trH);
-rows.forEach(r=>{let tr=document.createElement('tr');if(r.isSum)tr.className='sum-row';let tdL=document.createElement('td');tdL.className='label';tdL.textContent=r.label;tr.appendChild(tdL);for(let i=1;i<cols.length;i++){let td=document.createElement('td');let input=document.createElement('input');input.type='number';input.inputMode='numeric';input.dataset.col=i;input.dataset.row=r.id;if(r.isSum)input.readOnly=true;else input.addEventListener('input',()=>calc(i));td.appendChild(input);tr.appendChild(td)}table.appendChild(tr)});
-function calc(col){let s1=0;for(let i=1;i<=6;i++){let v=document.querySelector(`input[data-col="${col}"][data-row="${i}"]`).value;if(v)s1+=parseInt(v)}if(s1>=60)s1+=30;document.querySelector(`input[data-col="${col}"][data-row="zbir1"]`).value=s1||'';let max=document.querySelector(`input[data-col="${col}"][data-row="max"]`).value;let min=document.querySelector(`input[data-col="${col}"][data-row="min"]`).value;let k1=document.querySelector(`input[data-col="${col}"][data-row="1"]`).value;document.querySelector(`input[data-col="${col}"][data-row="maxmin"]`).value=(max&&min&&k1)?((max-min)*k1):'';let s2=0;['kenta','triling','ful','poker','yamb'].forEach(id=>{let v=document.querySelector(`input[data-col="${col}"][data-row="${id}"]`).value;if(v)s2+=parseInt(v)});document.querySelector(`input[data-col="${col}"][data-row="zbir2"]`).value=s2||''}
+
+let trH=document.createElement('tr');
+
+cols.forEach(c=>{
+let th=document.createElement('th');
+th.textContent=c;
+trH.appendChild(th);
+});
+
+let thTotal=document.createElement('th');
+thTotal.className='total-col';
+thTotal.textContent='Σ';
+trH.appendChild(thTotal);
+
+table.appendChild(trH);
+
+rows.forEach(r=>{
+let tr=document.createElement('tr');
+
+if(r.isSum)
+tr.className='sum-row';
+
+let tdL=document.createElement('td');
+tdL.className='label';
+tdL.textContent=r.label;
+tr.appendChild(tdL);
+
+for(let i=1;i<cols.length;i++){
+let td=document.createElement('td');
+let input=document.createElement('input');
+
+input.type='number';
+input.inputMode='numeric';
+input.dataset.col=i;
+input.dataset.row=r.id;
+
+if(r.isSum)
+input.readOnly=true;
+else
+input.addEventListener('input',()=>calc(i));
+
+td.appendChild(input);
+tr.appendChild(td);
+}
+
+let tdSumCol=document.createElement('td');
+if(r.showTotal) {
+  tdSumCol.className='total-cell';
+  let inputSumCol=document.createElement('input');
+  inputSumCol.type='number';
+  inputSumCol.readOnly=true;
+  inputSumCol.dataset.rowSum=r.id;
+  tdSumCol.appendChild(inputSumCol);
+} else {
+  tdSumCol.className='empty-cell';
+}
+tr.appendChild(tdSumCol);
+
+table.appendChild(tr);
+});
+
+function calc(col){
+
+let s1=0;
+
+for(let i=1;i<=6;i++){
+let v=document.querySelector(
+`input[data-col="${col}"][data-row="${i}"]`
+).value;
+
+if(v)
+s1+=parseInt(v);
+}
+
+if(s1>=60)
+s1+=30;
+
+document.querySelector(
+`input[data-col="${col}"][data-row="zbir1"]`
+).value=s1||'';
+
+let max=document.querySelector(
+`input[data-col="${col}"][data-row="max"]`
+).value;
+
+let min=document.querySelector(
+`input[data-col="${col}"][data-row="min"]`
+).value;
+
+let k1=document.querySelector(
+`input[data-col="${col}"][data-row="1"]`
+).value;
+
+document.querySelector(
+`input[data-col="${col}"][data-row="maxmin"]`
+).value=(max&&min&&k1)?((max-min)*k1):'';
+
+let s2=0;
+
+['kenta','triling','ful','poker','yamb'].forEach(id=>{
+let v=document.querySelector(
+`input[data-col="${col}"][data-row="${id}"]`
+).value;
+
+if(v)
+s2+=parseInt(v);
+});
+
+document.querySelector(
+`input[data-col="${col}"][data-row="zbir2"]`
+).value=s2||'';
+
+updateRowSums();
+updateGrandTotal();
+}
+
+function updateRowSums(){
+['zbir1','maxmin','zbir2'].forEach(rowId=>{
+let rowSum=0;
+let hasValue=false;
+
+for(let i=1; i<cols.length; i++){
+let val = document.querySelector(`input[data-col="${i}"][data-row="${rowId}"]`).value;
+if(val){
+rowSum += parseInt(val);
+hasValue = true;
+}
+}
+
+document.querySelector(`input[data-row-sum="${rowId}"]`).value = hasValue ? rowSum : '';
+});
+}
+
+function updateGrandTotal(){
+let grandTotal = 0;
+let hasAny = false;
+
+['zbir1','maxmin','zbir2'].forEach(rowId=>{
+let val = document.querySelector(`input[data-row-sum="${rowId}"]`).value;
+if(val){
+grandTotal += parseInt(val);
+hasAny = true;
+}
+});
+
+document.getElementById('grandTotal').textContent = hasAny ? grandTotal : '0';
+}
 </script>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+
 </body>
 </html>
