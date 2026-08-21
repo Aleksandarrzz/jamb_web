@@ -59,6 +59,66 @@ body{
   -webkit-text-fill-color:transparent;
 }
 
+/* PLAYER */
+
+.player-box{
+  display:flex;
+  gap:10px;
+  margin:0 0 16px;
+}
+
+.player-box input{
+  flex:1;
+  height:48px;
+  border:1px solid #334155;
+  border-radius:12px;
+  background:#1e293b;
+  color:#fff;
+  font-size:16px;
+  padding:0 14px;
+  text-align:left;
+}
+
+.player-box input::placeholder{
+  color:#94a3b8;
+}
+
+.player-box button{
+  height:48px;
+  padding:0 18px;
+  border:none;
+  border-radius:12px;
+  color:#fff;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.predict-button{
+  background:linear-gradient(135deg,#8b5cf6,#6366f1);
+}
+
+.confirm-button{
+  background:linear-gradient(135deg,#10b981,#059669);
+}
+
+.player-name-display{
+  margin:0 0 16px;
+  padding:4px 0;
+  color:#34d399;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+  text-align:left;
+  transition:opacity .2s;
+}
+
+.player-name-display:hover{
+  opacity:.8;
+}
+
+/* TABLE */
+
 .panel{
   background:linear-gradient(180deg,rgba(30,41,59,.95),rgba(15,23,42,.98));
   border:1px solid var(--line);
@@ -98,10 +158,10 @@ th:first-child{
   text-shadow:0 1px 0 rgba(255,255,255,.3);
 }
 
-th.total-col {
+th.total-col{
   background:linear-gradient(135deg,#10b981,#059669);
   color:#fff;
-  width: 60px;
+  width:60px;
 }
 
 td.label{
@@ -121,48 +181,50 @@ td.label{
 }
 
 /* Aktivne ćelije sa zbirom u Σ koloni */
-td.total-cell {
-  background: rgba(16,185,129,.12);
-  border: 1px solid #10b981;
+
+td.total-cell{
+  background:rgba(16,185,129,.12);
+  border:1px solid #10b981;
 }
 
 /* Prazne ćelije u Σ koloni bez unosa */
-td.empty-cell {
-  border: 1px solid var(--line);
-  border-right: none;
-  background: rgba(15,23,42,0.3);
+
+td.empty-cell{
+  border:1px solid var(--line);
+  border-right:none;
+  background:rgba(15,23,42,0.3);
 }
 
-.total-sum-container {
-  margin-top: 14px;
-  background: linear-gradient(180deg,rgba(30,41,59,.95),rgba(15,23,42,.98));
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 14px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+.total-sum-container{
+  margin-top:14px;
+  background:linear-gradient(180deg,rgba(30,41,59,.95),rgba(15,23,42,.98));
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
 }
 
-.total-sum-label {
-  font-size: 16px;
-  font-weight: 800;
-  color: #34d399;
-  letter-spacing: 1px;
+.total-sum-label{
+  font-size:16px;
+  font-weight:800;
+  color:#34d399;
+  letter-spacing:1px;
 }
 
-.total-sum-value {
-  font-size: 24px;
-  font-weight: 900;
-  color: #fff;
-  background: rgba(16,185,129,.2);
-  padding: 6px 20px;
-  border-radius: 10px;
-  border: 1px solid #10b981;
-  min-width: 110px;
-  text-align: center;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,.2);
+.total-sum-value{
+  font-size:24px;
+  font-weight:900;
+  color:#fff;
+  background:rgba(16,185,129,.2);
+  padding:6px 20px;
+  border-radius:10px;
+  border:1px solid #10b981;
+  min-width:110px;
+  text-align:center;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.2);
 }
 
 input{
@@ -190,11 +252,11 @@ input:focus{
   pointer-events:none
 }
 
-.total-cell input {
-  color: #34d399;
-  font-weight: 900;
-  pointer-events: none;
-  background: transparent;
+.total-cell input{
+  color:#34d399;
+  font-weight:900;
+  pointer-events:none;
+  background:transparent;
 }
 
 input::-webkit-outer-spin-button,
@@ -212,6 +274,7 @@ input::-webkit-inner-spin-button{
 }
 
 @media(max-width:480px){
+
   .logo{
     font-size:40px
   }
@@ -223,6 +286,15 @@ input::-webkit-inner-spin-button{
   input{
     font-size:16px
   }
+
+  .player-box{
+    flex-direction:column;
+  }
+
+  .player-box button{
+    width:100%;
+  }
+
 }
 </style>
 
@@ -240,13 +312,45 @@ input::-webkit-inner-spin-button{
 
 <div class="logo">PAPIRIĆI ZA <span>JAMB</span></div>
 
+<div class="player-box" id="playerBox">
+
+  <input
+    type="text"
+    id="playerName"
+    placeholder="Unesi ime igrača"
+    autocomplete="off"
+  >
+
+  <button
+    class="predict-button"
+    onclick="predictPlayer()"
+  >
+    PREDVIDI
+  </button>
+
+  <button
+    class="confirm-button"
+    onclick="confirmPlayer()"
+  >
+    POTVRDI
+  </button>
+
+</div>
+
 <div class="panel">
 <table id="jambTable"></table>
 </div>
 
 <div class="total-sum-container">
-  <div class="total-sum-label">UKUPNO:</div>
-  <div class="total-sum-value" id="grandTotal">0</div>
+
+  <div class="total-sum-label">
+    UKUPNO:
+  </div>
+
+  <div class="total-sum-value" id="grandTotal">
+    0
+  </div>
+
 </div>
 
 <div class="footer">
@@ -256,6 +360,7 @@ Kada želite neko polje da "precrtate", upišite "0", pozdravljam vas
 </div>
 
 <script>
+
 const cols=['🎲','⬇','⬆','↕','N','R','D','⬇↕','↕','O','M'];
 
 const rows=[
@@ -265,16 +370,16 @@ const rows=[
 {id:'4',label:'4'},
 {id:'5',label:'5'},
 {id:'6',label:'6'},
-{id:'zbir1',label:'ZBIR',isSum:true, showTotal:true},
+{id:'zbir1',label:'ZBIR',isSum:true,showTotal:true},
 {id:'max',label:'MAX'},
 {id:'min',label:'MIN'},
-{id:'maxmin',label:'MAX-MIN',isSum:true, showTotal:true},
+{id:'maxmin',label:'MAX-MIN',isSum:true,showTotal:true},
 {id:'kenta',label:'KENTA'},
 {id:'triling',label:'TRILING'},
 {id:'ful',label:'FUL'},
 {id:'poker',label:'POKER'},
 {id:'yamb',label:'YAMB'},
-{id:'zbir2',label:'ZBIR',isSum:true, showTotal:true}
+{id:'zbir2',label:'ZBIR',isSum:true,showTotal:true}
 ];
 
 const table=document.getElementById('jambTable');
@@ -282,155 +387,470 @@ const table=document.getElementById('jambTable');
 let trH=document.createElement('tr');
 
 cols.forEach(c=>{
-let th=document.createElement('th');
-th.textContent=c;
-trH.appendChild(th);
+
+  let th=document.createElement('th');
+
+  th.textContent=c;
+
+  trH.appendChild(th);
+
 });
 
 let thTotal=document.createElement('th');
+
 thTotal.className='total-col';
+
 thTotal.textContent='Σ';
+
 trH.appendChild(thTotal);
 
 table.appendChild(trH);
 
 rows.forEach(r=>{
-let tr=document.createElement('tr');
 
-if(r.isSum)
-tr.className='sum-row';
+  let tr=document.createElement('tr');
 
-let tdL=document.createElement('td');
-tdL.className='label';
-tdL.textContent=r.label;
-tr.appendChild(tdL);
+  if(r.isSum)
+    tr.className='sum-row';
 
-for(let i=1;i<cols.length;i++){
-let td=document.createElement('td');
-let input=document.createElement('input');
+  let tdL=document.createElement('td');
 
-input.type='number';
-input.inputMode='numeric';
-input.dataset.col=i;
-input.dataset.row=r.id;
+  tdL.className='label';
 
-if(r.isSum)
-input.readOnly=true;
-else
-input.addEventListener('input',()=>calc(i));
+  tdL.textContent=r.label;
 
-td.appendChild(input);
-tr.appendChild(td);
-}
+  tr.appendChild(tdL);
 
-let tdSumCol=document.createElement('td');
-if(r.showTotal) {
-  tdSumCol.className='total-cell';
-  let inputSumCol=document.createElement('input');
-  inputSumCol.type='number';
-  inputSumCol.readOnly=true;
-  inputSumCol.dataset.rowSum=r.id;
-  tdSumCol.appendChild(inputSumCol);
-} else {
-  tdSumCol.className='empty-cell';
-}
-tr.appendChild(tdSumCol);
+  for(let i=1;i<cols.length;i++){
 
-table.appendChild(tr);
+    let td=document.createElement('td');
+
+    let input=document.createElement('input');
+
+    input.type='number';
+
+    input.inputMode='numeric';
+
+    input.dataset.col=i;
+
+    input.dataset.row=r.id;
+
+    if(r.isSum){
+
+      input.readOnly=true;
+
+    }else{
+
+      input.addEventListener('input',()=>calc(i));
+
+    }
+
+    td.appendChild(input);
+
+    tr.appendChild(td);
+
+  }
+
+  let tdSumCol=document.createElement('td');
+
+  if(r.showTotal){
+
+    tdSumCol.className='total-cell';
+
+    let inputSumCol=document.createElement('input');
+
+    inputSumCol.type='number';
+
+    inputSumCol.readOnly=true;
+
+    inputSumCol.dataset.rowSum=r.id;
+
+    tdSumCol.appendChild(inputSumCol);
+
+  }else{
+
+    tdSumCol.className='empty-cell';
+
+  }
+
+  tr.appendChild(tdSumCol);
+
+  table.appendChild(tr);
+
 });
+
 
 function calc(col){
 
-let s1=0;
+  let s1=0;
 
-for(let i=1;i<=6;i++){
-let v=document.querySelector(
-`input[data-col="${col}"][data-row="${i}"]`
-).value;
+  for(let i=1;i<=6;i++){
 
-if(v)
-s1+=parseInt(v);
+    let v=document.querySelector(
+      `input[data-col="${col}"][data-row="${i}"]`
+    ).value;
+
+    if(v)
+      s1+=parseInt(v);
+
+  }
+
+  if(s1>=60)
+    s1+=30;
+
+  document.querySelector(
+    `input[data-col="${col}"][data-row="zbir1"]`
+  ).value=s1||'';
+
+
+  let max=document.querySelector(
+    `input[data-col="${col}"][data-row="max"]`
+  ).value;
+
+  let min=document.querySelector(
+    `input[data-col="${col}"][data-row="min"]`
+  ).value;
+
+  let k1=document.querySelector(
+    `input[data-col="${col}"][data-row="1"]`
+  ).value;
+
+  document.querySelector(
+    `input[data-col="${col}"][data-row="maxmin"]`
+  ).value=(max&&min&&k1)?((max-min)*k1):'';
+
+
+  let s2=0;
+
+  ['kenta','triling','ful','poker','yamb'].forEach(id=>{
+
+    let v=document.querySelector(
+      `input[data-col="${col}"][data-row="${id}"]`
+    ).value;
+
+    if(v)
+      s2+=parseInt(v);
+
+  });
+
+  document.querySelector(
+    `input[data-col="${col}"][data-row="zbir2"]`
+  ).value=s2||'';
+
+  updateRowSums();
+
+  updateGrandTotal();
+
 }
 
-if(s1>=60)
-s1+=30;
-
-document.querySelector(
-`input[data-col="${col}"][data-row="zbir1"]`
-).value=s1||'';
-
-let max=document.querySelector(
-`input[data-col="${col}"][data-row="max"]`
-).value;
-
-let min=document.querySelector(
-`input[data-col="${col}"][data-row="min"]`
-).value;
-
-let k1=document.querySelector(
-`input[data-col="${col}"][data-row="1"]`
-).value;
-
-document.querySelector(
-`input[data-col="${col}"][data-row="maxmin"]`
-).value=(max&&min&&k1)?((max-min)*k1):'';
-
-let s2=0;
-
-['kenta','triling','ful','poker','yamb'].forEach(id=>{
-let v=document.querySelector(
-`input[data-col="${col}"][data-row="${id}"]`
-).value;
-
-if(v)
-s2+=parseInt(v);
-});
-
-document.querySelector(
-`input[data-col="${col}"][data-row="zbir2"]`
-).value=s2||'';
-
-updateRowSums();
-updateGrandTotal();
-}
 
 function updateRowSums(){
-['zbir1','maxmin','zbir2'].forEach(rowId=>{
-let rowSum=0;
-let hasValue=false;
 
-for(let i=1; i<cols.length; i++){
-let val = document.querySelector(`input[data-col="${i}"][data-row="${rowId}"]`).value;
-if(val){
-rowSum += parseInt(val);
-hasValue = true;
-}
+  ['zbir1','maxmin','zbir2'].forEach(rowId=>{
+
+    let rowSum=0;
+
+    let hasValue=false;
+
+    for(let i=1;i<cols.length;i++){
+
+      let val=document.querySelector(
+        `input[data-col="${i}"][data-row="${rowId}"]`
+      ).value;
+
+      if(val){
+
+        rowSum+=parseInt(val);
+
+        hasValue=true;
+
+      }
+
+    }
+
+    document.querySelector(
+      `input[data-row-sum="${rowId}"]`
+    ).value=hasValue?rowSum:'';
+
+  });
+
 }
 
-document.querySelector(`input[data-row-sum="${rowId}"]`).value = hasValue ? rowSum : '';
-});
-}
 
 function updateGrandTotal(){
-let grandTotal = 0;
-let hasAny = false;
 
-['zbir1','maxmin','zbir2'].forEach(rowId=>{
-let val = document.querySelector(`input[data-row-sum="${rowId}"]`).value;
-if(val){
-grandTotal += parseInt(val);
-hasAny = true;
-}
-});
+  let grandTotal=0;
 
-document.getElementById('grandTotal').textContent = hasAny ? grandTotal : '0';
+  let hasAny=false;
+
+  ['zbir1','maxmin','zbir2'].forEach(rowId=>{
+
+    let val=document.querySelector(
+      `input[data-row-sum="${rowId}"]`
+    ).value;
+
+    if(val){
+
+      grandTotal+=parseInt(val);
+
+      hasAny=true;
+
+    }
+
+  });
+
+  document.getElementById('grandTotal').textContent=
+    hasAny?grandTotal:'0';
+
 }
+
+
+/* =========================================
+   PREDIKCIJA
+   ========================================= */
+
+function predictPlayer(){
+
+  const input=document.getElementById('playerName');
+
+  const ime=input.value.trim();
+
+  if(!ime){
+
+    alert("Unesi ime igrača.");
+
+    return;
+
+  }
+
+  const imeNormalizovano=ime.toLowerCase();
+
+  /*
+    Predikcija postoji samo za:
+
+    Milos
+    Miloš
+
+    Velika/mala slova nisu bitna.
+  */
+
+  if(
+    imeNormalizovano!=="milos" &&
+    imeNormalizovano!=="miloš"
+  ){
+
+    alert("Za ovog igrača nema predikcije.");
+
+    return;
+
+  }
+
+
+  /*
+    MAKSIMALNE VREDNOSTI
+
+    MAX      = 30
+    MIN      = 1
+    KENTA    = 76
+    TRILING  = 38
+    FUL      = 58
+    POKER    = 64
+    YAMB     = 160
+
+    O (Obavezno) SE NE POPUNJAVA.
+  */
+
+  const rezultat={
+
+    max:30,
+
+    min:1,
+
+    kenta:76,
+
+    triling:38,
+
+    ful:58,
+
+    poker:64,
+
+    yamb:160
+
+  };
+
+
+  /*
+    Kolone:
+
+    1 = 🎲
+    2 = ⬇
+    3 = ⬆
+    4 = ↕
+    5 = N
+    6 = R
+    7 = D
+    8 = ⬇↕
+    9 = O  ← PRESKAČEMO
+    10 = M
+  */
+
+  const kolone=[1,2,3,4,5,6,7,8,10];
+
+
+  kolone.forEach(col=>{
+
+    Object.entries(rezultat).forEach(([red,vrednost])=>{
+
+      const polje=document.querySelector(
+        `input[data-col="${col}"][data-row="${red}"]`
+      );
+
+      if(polje)
+        polje.value=vrednost;
+
+    });
+
+    calc(col);
+
+  });
+
+
+  /*
+    Nakon predikcije ostaje samo ime.
+  */
+
+  prikaziIme(ime);
+
+}
+
+
+/* =========================================
+   SAMO POTVRDI
+   ========================================= */
+
+function confirmPlayer(){
+
+  const input=document.getElementById('playerName');
+
+  const ime=input.value.trim();
+
+  if(!ime){
+
+    alert("Unesi ime igrača.");
+
+    return;
+
+  }
+
+  /*
+    POTVRDI ne menja nijedan rezultat.
+    Samo potvrđuje ime igrača.
+  */
+
+  prikaziIme(ime);
+
+}
+
+
+/* =========================================
+   PRIKAŽI IME
+   ========================================= */
+
+function prikaziIme(ime){
+
+  const playerBox=document.getElementById('playerBox');
+
+  playerBox.outerHTML=`
+
+    <div
+      class="player-name-display"
+      id="playerNameDisplay"
+      onclick="otvoriIzmenuImena()"
+      title="Klikni da promeniš igrača"
+    >
+      ${escapeHtml(ime)}
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================
+   KLIK NA IME
+   ========================================= */
+
+function otvoriIzmenuImena(){
+
+  const display=document.getElementById('playerNameDisplay');
+
+  const trenutnoIme=display.textContent.trim();
+
+  display.outerHTML=`
+
+    <div class="player-box" id="playerBox">
+
+      <input
+        type="text"
+        id="playerName"
+        value="${escapeHtml(trenutnoIme)}"
+        autocomplete="off"
+      >
+
+      <button
+        class="predict-button"
+        onclick="predictPlayer()"
+      >
+        PREDVIDI
+      </button>
+
+      <button
+        class="confirm-button"
+        onclick="confirmPlayer()"
+      >
+        POTVRDI
+      </button>
+
+    </div>
+
+  `;
+
+  const input=document.getElementById('playerName');
+
+  input.focus();
+
+  input.select();
+
+}
+
+
+/* =========================================
+   ZAŠTITA IMENA
+   ========================================= */
+
+function escapeHtml(text){
+
+  const div=document.createElement('div');
+
+  div.textContent=text;
+
+  return div.innerHTML;
+
+}
+
 </script>
 
 <script>
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+
+if(
+  "serviceWorker" in navigator &&
+  location.protocol.startsWith("http")
+){
+
   navigator.serviceWorker.register("sw.js");
+
 }
+
 </script>
 
 </body>
