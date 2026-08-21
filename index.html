@@ -63,12 +63,14 @@ body{
 
 .player-box{
   display:flex;
-  gap:10px;
+  gap:8px;
   margin:0 0 16px;
+  align-items:stretch;
 }
 
 .player-box input{
   flex:1;
+  min-width:0;
   height:48px;
   border:1px solid #334155;
   border-radius:12px;
@@ -85,13 +87,16 @@ body{
 
 .player-box button{
   height:48px;
-  padding:0 18px;
+  min-height:48px;
+  padding:0 14px;
   border:none;
-  border-radius:12px;
+  border-radius:10px;
   color:#fff;
-  font-size:15px;
+  font-size:13px;
   font-weight:800;
   cursor:pointer;
+  white-space:nowrap;
+  flex-shrink:0;
 }
 
 .predict-button{
@@ -110,11 +115,6 @@ body{
   font-weight:900;
   cursor:pointer;
   text-align:left;
-  transition:opacity .2s;
-}
-
-.player-name-display:hover{
-  opacity:.8;
 }
 
 /* TABLE */
@@ -273,6 +273,8 @@ input::-webkit-inner-spin-button{
   letter-spacing:.5px;
 }
 
+/* MOBILNI */
+
 @media(max-width:480px){
 
   .logo{
@@ -288,11 +290,24 @@ input::-webkit-inner-spin-button{
   }
 
   .player-box{
-    flex-direction:column;
+    flex-direction:row;
+    gap:6px;
+    align-items:stretch;
+  }
+
+  .player-box input{
+    height:50px;
+    min-height:50px;
+    font-size:16px;
+    padding:0 12px;
   }
 
   .player-box button{
-    width:100%;
+    height:50px;
+    min-height:50px;
+    padding:0 10px;
+    font-size:12px;
+    border-radius:9px;
   }
 
 }
@@ -317,7 +332,7 @@ input::-webkit-inner-spin-button{
   <input
     type="text"
     id="playerName"
-    placeholder="Unesi ime igrača"
+    placeholder="Unesi ime igrača (npr. Miloš)"
     autocomplete="off"
   >
 
@@ -625,15 +640,6 @@ function predictPlayer(){
 
   const imeNormalizovano=ime.toLowerCase();
 
-  /*
-    Predikcija postoji samo za:
-
-    Milos
-    Miloš
-
-    Velika/mala slova nisu bitna.
-  */
-
   if(
     imeNormalizovano!=="milos" &&
     imeNormalizovano!=="miloš"
@@ -644,21 +650,6 @@ function predictPlayer(){
     return;
 
   }
-
-
-  /*
-    MAKSIMALNE VREDNOSTI
-
-    MAX      = 30
-    MIN      = 1
-    KENTA    = 76
-    TRILING  = 38
-    FUL      = 58
-    POKER    = 64
-    YAMB     = 160
-
-    O (Obavezno) SE NE POPUNJAVA.
-  */
 
   const rezultat={
 
@@ -678,10 +669,7 @@ function predictPlayer(){
 
   };
 
-
   /*
-    Kolone:
-
     1 = 🎲
     2 = ⬇
     3 = ⬆
@@ -690,12 +678,11 @@ function predictPlayer(){
     6 = R
     7 = D
     8 = ⬇↕
-    9 = O  ← PRESKAČEMO
+    9 = O ← PRESKAČEMO
     10 = M
   */
 
   const kolone=[1,2,3,4,5,6,7,8,10];
-
 
   kolone.forEach(col=>{
 
@@ -713,11 +700,6 @@ function predictPlayer(){
     calc(col);
 
   });
-
-
-  /*
-    Nakon predikcije ostaje samo ime.
-  */
 
   prikaziIme(ime);
 
@@ -742,18 +724,13 @@ function confirmPlayer(){
 
   }
 
-  /*
-    POTVRDI ne menja nijedan rezultat.
-    Samo potvrđuje ime igrača.
-  */
-
   prikaziIme(ime);
 
 }
 
 
 /* =========================================
-   PRIKAŽI IME
+   PRIKAŽI SAMO IME
    ========================================= */
 
 function prikaziIme(ime){
